@@ -1,5 +1,5 @@
 @use "../../components/card/card-theme" as card;
 
-@mixin all-components-themes($theme,$spacing) {
-  @include card.theme($theme,$spacing);
+@mixin all-components-themes($theme, $spacing) {
+  @include card.theme($theme, $spacing);
 }

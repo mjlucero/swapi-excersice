@@ -1,5 +1,5 @@
-import { Route } from "../models/route.model";
 import { PlanetsPage, PlanetPage, ResidenPage } from "../pages";
+import { Route } from "@/models/route.model";
 
 export const routes: Route[] = [
   {

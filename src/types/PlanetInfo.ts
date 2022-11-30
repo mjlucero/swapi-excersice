@@ -1,4 +1,4 @@
-import { Planet } from "../models/planet.model";
+import { Planet } from "@/models/planet.model";
 
 export type PlanetInfo = Omit<
   Planet,

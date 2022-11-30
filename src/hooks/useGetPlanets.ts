@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { Planet } from "../models/planet.model";
-import { PlanetsResponse } from "../models/planets.response";
-import { getPlanets } from "../services/planets.service";
-import { Pagination } from "../types/pagination";
+
+import { getPlanets } from "@/services/planets.service";
+import { Pagination } from "@/types/Pagination";
+import { Planet } from "@/models/planet.model";
+import { PlanetsResponse } from "@/models/planets.response";
 
 export const useGetPlanets = () => {
   const [nextUrl, setNextUrl] = useState<string>("");
@@ -23,20 +24,18 @@ export const useGetPlanets = () => {
     getPlanets(nextUrl).then(onGetPlanets);
   }, [nextUrl]);
 
-  const onGetPlanets = ({
-    count,
-    next,
-    previous,
-    results,
-  }: PlanetsResponse) => {
-    setPlanets(results);
-    setPagination({
-      count,
-      next,
-      previous,
-    });
-    setIsLoading(false);
-  };
+  const onGetPlanets = useCallback(
+    ({ count, next, previous, results }: PlanetsResponse) => {
+      setPlanets(results);
+      setPagination({
+        count,
+        next,
+        previous,
+      });
+      setIsLoading(false);
+    },
+    []
+  );
 
   return {
     isLoading,

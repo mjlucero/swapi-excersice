@@ -1,0 +1,13 @@
+.planet-card-container {
+  min-width: 300px;
+
+  &__details {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__detail-title {
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Planet } from "../../models/planet.model";
 import { getPlanets } from "../../services/planets.service";
 import { Pagination } from "../../types/pagination";
-import { PlanetCard } from "./components/PlanetCard";
+import { PlanetCard } from "./components/planet-card/PlanetCard";
 
 import "./planetsPage.scss";
 

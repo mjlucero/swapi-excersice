@@ -4,6 +4,17 @@
   gap: 16px;
 }
 
+.planets-pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+
+  & .btn {
+    width: 115px;
+  }
+}
+
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
   .planets-container {

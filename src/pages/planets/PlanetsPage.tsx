@@ -1,42 +1,41 @@
-import { useEffect, useState } from "react";
-import { Planet } from "../../models/planet.model";
-import { getPlanets } from "../../services/planets.service";
-import { Pagination } from "../../types/pagination";
+import { Button } from "../../components/button/Button";
+import { useGetPlanets } from "../../hooks/useGetPlanets";
 import { PlanetCard } from "./components/planet-card/PlanetCard";
 
 import "./planetsPage.scss";
 
 export const PlanetsPage = () => {
-  const [planets, setPlanets] = useState<Planet[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({
-    count: 0,
-    next: null,
-    previous: null,
-  });
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, pagination, planets, setNextUrl } = useGetPlanets();
 
-  useEffect(() => {
-    getPlanets().then(({ count, next, previous, results }) => {
-      console.log({ results });
-      setPlanets(results);
-      setPagination({
-        count,
-        next,
-        previous,
-      });
-      setIsLoading(false);
-    });
-  }, []);
+  const handlePagination = (nextUrl: string | null) => {
+    if (nextUrl) {
+      setNextUrl(nextUrl);
+    }
+  };
 
   return (
-    <div className="planets-container">
-      {planets.map((planet, index) => (
-        <PlanetCard
-          key={index}
-          planet={planet}
-          onPlanetClick={() => console.log("click")}
-        />
-      ))}
+    <div>
+      <div className="planets-container">
+        {planets.map((planet, index) => (
+          <PlanetCard
+            key={index}
+            planet={planet}
+            onPlanetClick={() => console.log("click")}
+          />
+        ))}
+      </div>
+      <div className="planets-pagination">
+        {pagination.previous && (
+          <Button onClick={() => handlePagination(pagination.previous)}>
+            {"< Previous"}
+          </Button>
+        )}
+        {pagination.next && (
+          <Button onClick={() => handlePagination(pagination.next)}>
+            {"Next >"}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { PlanetCardList } from "./components/planet-card-list/PlanetCardList";
 import { useGetPlanets } from "@/hooks/useGetPlanets";
 
 import "./planetsPage.scss";
+import { Spinner } from "@/components/spinner/Spinner";
 
 export const PlanetsPage = () => {
   const { isLoading, pagination, planets, setNextUrl } = useGetPlanets();
@@ -17,6 +18,7 @@ export const PlanetsPage = () => {
 
   const handlePagination = (nextUrl: string | null) => {
     if (nextUrl) {
+      setSearchTerm("");
       setNextUrl(nextUrl);
     }
   };
@@ -36,30 +38,43 @@ export const PlanetsPage = () => {
   };
 
   return (
-    <div>
-      <div className="planets-filter">
-        <Input
-          type="text"
-          placeholder="Search Planet"
-          onChange={handleFilterChange}
-          value={searchTerm}
-        />
-      </div>
-      <div className="planets-container">
-        <PlanetCardList planets={searchTerm ? filteredPlanets : planets} />
-      </div>
-      <div className="planets-pagination">
-        {pagination.previous && (
-          <Button onClick={() => handlePagination(pagination.previous)}>
-            {"< Previous"}
-          </Button>
+    <>
+      <div className="planets-page">
+        {isLoading && (
+          <div className="planets-page__spinner-container">
+            <Spinner />
+          </div>
         )}
-        {pagination.next && (
-          <Button onClick={() => handlePagination(pagination.next)}>
-            {"Next >"}
-          </Button>
+        {!isLoading && (
+          <>
+            <div className="planets-page__filter">
+              <Input
+                type="text"
+                placeholder="Search Planet"
+                onChange={handleFilterChange}
+                value={searchTerm}
+              />
+            </div>
+            <div className="planets-page__cards">
+              <PlanetCardList
+                planets={searchTerm ? filteredPlanets : planets}
+              />
+            </div>
+            <div className="planets-page__pagination">
+              {pagination.previous && (
+                <Button onClick={() => handlePagination(pagination.previous)}>
+                  {"< Previous"}
+                </Button>
+              )}
+              {pagination.next && (
+                <Button onClick={() => handlePagination(pagination.next)}>
+                  {"Next >"}
+                </Button>
+              )}
+            </div>
+          </>
         )}
       </div>
-    </div>
+    </>
   );
 };

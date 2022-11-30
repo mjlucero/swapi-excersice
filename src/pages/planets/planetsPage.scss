@@ -1,47 +1,61 @@
-.planets-filter {
-  margin-bottom: 16px;
-}
+.planets-page {
+  flex: 1;
 
-.planets-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
+  &__spinner-container {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+  }
 
-.planets-pagination {
-  margin-top: 16px;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
+  &__filter {
+    margin-bottom: 16px;
+  }
 
-  & .btn {
-    width: 115px;
+  &__cards {
+    display: grid;
+    flex: 1;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  &__pagination {
+    margin: 16px 0;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    height: 40px;
+
+    & .btn {
+      width: 115px;
+    }
   }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-  .planets-container {
+  .planets-page__cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  .planets-container {
+  .planets-page__cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .planets-container {
+  .planets-page__cards {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media only screen and (min-width: 1468px) {
-  .planets-container {
+  .planets-page__cards {
     grid-template-columns: repeat(4, 1fr);
   }
 }

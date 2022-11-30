@@ -4,7 +4,7 @@ import "./App.scss";
 
 function App() {
   return (
-    <div className="App">
+    <div className="swapi-app">
       <h1>Hello swapi</h1>
       <AppRoutes>
         <span>All Planets</span>

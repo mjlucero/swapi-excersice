@@ -1,3 +1,5 @@
+@import "../../assets/scss/mixins";
+
 .planets-page {
   flex: 1;
 
@@ -13,11 +15,7 @@
   }
 
   &__cards {
-    display: grid;
-    flex: 1;
-    gap: 16px;
-    grid-template-columns: 1fr;
-    overflow: auto;
+    @include grid-disposition;
   }
 
   &__pagination {
@@ -30,32 +28,5 @@
     & .btn {
       width: 115px;
     }
-  }
-}
-
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-  .planets-page__cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-  .planets-page__cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {
-  .planets-page__cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media only screen and (min-width: 1468px) {
-  .planets-page__cards {
-    grid-template-columns: repeat(4, 1fr);
   }
 }

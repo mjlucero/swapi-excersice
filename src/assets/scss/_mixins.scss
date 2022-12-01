@@ -1,0 +1,45 @@
+@mixin grid-disposition() {
+  display: grid;
+  flex: 1;
+  gap: 16px;
+  grid-template-columns: 1fr;
+
+  @include for-sm-device {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include for-md-device {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include for-lg-device {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include for-xl-device {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@mixin for-sm-device {
+  @media only screen and (min-width: 768px) {
+    @content;
+  }
+}
+@mixin for-md-device {
+  @media only screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin for-lg-device {
+  @media only screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin for-xl-device {
+  @media only screen and (min-width: 1468px) {
+    @content;
+  }
+}

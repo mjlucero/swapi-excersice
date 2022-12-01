@@ -11,13 +11,13 @@ export const routes: Route[] = [
   {
     Component: PlanetPage,
     name: "Planet",
-    path: "planet/:id",
-    to: "/planet/",
+    path: "planets/:planetId",
+    to: "/planets",
   },
   {
     Component: ResidenPage,
-    name: "Residents",
-    path: "resident/:id",
-    to: "/resident/",
+    name: "People",
+    path: "people/:peopleId",
+    to: "/people",
   },
 ];

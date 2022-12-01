@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { Card } from "@/components/card/Card";
 import { getResourceUrlFromApiUrl } from "@/helpers";
@@ -13,6 +13,7 @@ interface ResidentsCardListProps {
 }
 
 export const ResidentsCardList = ({ residents }: ResidentsCardListProps) => {
+  const { pathname: currentRoute } = useLocation();
   const navigate = useNavigate();
   const { setSelectedResident } = useContext(ResidentsContext);
 
@@ -21,7 +22,7 @@ export const ResidentsCardList = ({ residents }: ResidentsCardListProps) => {
 
     const residentUrl = getResourceUrlFromApiUrl(resident.url);
 
-    navigate(residentUrl);
+    navigate(currentRoute + residentUrl, { state: resident.name });
   };
 
   return (

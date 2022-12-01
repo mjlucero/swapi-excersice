@@ -17,7 +17,7 @@ export const routes: Route[] = [
   {
     Component: ResidenPage,
     name: "People",
-    path: "people/:peopleId",
+    path: "planets/:planetId/people/:peopleId",
     to: "/people",
   },
 ];

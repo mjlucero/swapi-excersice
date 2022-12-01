@@ -1,9 +1,9 @@
 import { Resident } from "@/models/resident.model";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { ResidentsContext } from "./ResidentsContext";
 
 interface ResidentsContexProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export function ResidentsContextProvider({

@@ -1,3 +1,3 @@
-export { PlanetsPage } from "./planets/PlanetsPage";
 export { PlanetPage } from "./planet/PlanetPage";
-export { ResidenPage } from "./resident/ResidenPage";
+export { PlanetsPage } from "./planets/PlanetsPage";
+export { ResidentPage } from "./resident/ResidentPage";

@@ -6,18 +6,24 @@ import { PlanetsResponse } from "@/models/planets.response";
 export const getPlanets: (apiUrl?: string) => Promise<PlanetsResponse> = async (
   apiUrl
 ) => {
-  // const res = await fetch(apiUrl ? apiUrl : PLANETS_URL);
-  // const planetsResponse = await (res.json() as Promise<PlanetsResponse>);
-  // return planetsResponse;
-
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(planetsMock);
     }, 2000);
   });
+
+  // const res = await fetch(apiUrl ? apiUrl : PLANETS_URL);
+  // const planetsResponse = await (res.json() as Promise<PlanetsResponse>);
+  // return planetsResponse;
 };
 
-export const getPlanetById = async (planetId: string) => {
+export const getPlanetById = async (planetId: string): Promise<Planet> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(planetsMock.results[0]);
+    }, 2000);
+  });
+
   const res = await fetch(`${PLANETS_URL}/${planetId}`);
   const planetResponse = await (res.json() as Promise<Planet>);
 

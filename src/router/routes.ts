@@ -1,4 +1,4 @@
-import { PlanetsPage, PlanetPage, ResidenPage } from "../pages";
+import { PlanetsPage, PlanetPage, ResidentPage } from "../pages";
 import { Route } from "@/models/route.model";
 
 export const routes: Route[] = [
@@ -13,7 +13,7 @@ export const routes: Route[] = [
     path: "planets/:planetId",
   },
   {
-    Component: ResidenPage,
+    Component: ResidentPage,
     crumbKey: "resident",
     path: "planets/:planetId/people/:peopleId",
   },

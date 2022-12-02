@@ -1,3 +1,4 @@
+import { PEOPLE_URL } from "@/constants/api-urls";
 import { residentsMock, residentsResponseMock } from "@/mocks/residents.mock";
 import { Resident } from "@/models/residents.model";
 import { ResidentsResponse } from "@/models/residents.response";
@@ -35,4 +36,19 @@ export const getResidentsByPlanetId = async (
     planetName: planet.name,
     residents,
   };
+};
+
+export const getResidentById = async (
+  residentId: string
+): Promise<Resident> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(residentsResponseMock.residents[0]);
+    }, 2000);
+  });
+
+  const res = await fetch(`${PEOPLE_URL}/${residentId}`);
+  const resident = (await res.json()) as Promise<Resident>;
+
+  return resident;
 };

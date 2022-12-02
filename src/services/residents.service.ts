@@ -1,5 +1,6 @@
-import { residentsMock } from "@/mocks/residents.mock";
-import { Resident } from "@/models/resident.model";
+import { residentsMock, residentsResponseMock } from "@/mocks/residents.mock";
+import { Resident } from "@/models/residents.model";
+import { ResidentsResponse } from "@/models/residents.response";
 import { getPlanetById } from "./planets.service";
 
 export const getResidentsByUrls = async (
@@ -18,16 +19,20 @@ export const getResidentsByUrls = async (
   return await Promise.all(residentsPromises);
 };
 
-export const getResidentsByPlanet = async (
+export const getResidentsByPlanetId = async (
   planetId: string
-): Promise<Resident[]> => {
+): Promise<ResidentsResponse> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(residentsMock);
+      resolve(residentsResponseMock);
     }, 2000);
   });
 
   const planet = await getPlanetById(planetId);
+  const residents = await getResidentsByUrls(planet.residents);
 
-  return getResidentsByUrls(planet.residents);
+  return {
+    planetName: planet.name,
+    residents,
+  };
 };

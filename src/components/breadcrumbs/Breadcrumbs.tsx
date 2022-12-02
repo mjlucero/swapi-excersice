@@ -1,8 +1,9 @@
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { routes } from "@/router/routes";
-import { useEffect, useState } from "react";
 
 import "./breadcrumbs.scss";
+import { BreadcrumbContext } from "@/context/breadcrumb/BreadcrumbContext";
 
 interface Crumb {
   title: string;
@@ -10,6 +11,7 @@ interface Crumb {
 }
 
 export const Breadcrumbs = () => {
+  const { breadcrumbTitlesMap } = useContext(BreadcrumbContext);
   const [crumbs, setCrumbs] = useState<Crumb[]>([]);
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((path) => path);
@@ -25,7 +27,10 @@ export const Breadcrumbs = () => {
       );
 
       if (existingPath) {
-        const { name: title } = existingPath;
+        const title =
+          breadcrumbTitlesMap.get(existingPath.crumbKey) ||
+          existingPath.crumbKey;
+
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
         crumbsRoutes.push({
@@ -36,7 +41,7 @@ export const Breadcrumbs = () => {
     });
 
     setCrumbs(crumbsRoutes);
-  }, [location]);
+  }, [location, breadcrumbTitlesMap]);
 
   return (
     <nav aria-label="Breadcrumb" className="breadcrumb">

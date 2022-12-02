@@ -1,5 +1,7 @@
+import { BreadcrumbKeys } from "@/types/BreadcrumbKeys";
+
 export interface Route {
   Component: () => JSX.Element;
-  name: string;
+  crumbKey: BreadcrumbKeys;
   path: string;
 }

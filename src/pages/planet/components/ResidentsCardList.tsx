@@ -3,26 +3,29 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { Card } from "@/components/card/Card";
 import { getResourceUrlFromApiUrl } from "@/helpers";
-import { Resident } from "@/models/resident.model";
-import { ResidentsContext } from "@/context/ResidentsContext";
+import { Resident } from "@/models/residents.model";
+import { ResidentsContext } from "@/context/residents/ResidentsContext";
 
 import "./residents-card-list.scss";
+import { BreadcrumbContext } from "@/context/breadcrumb/BreadcrumbContext";
 
 interface ResidentsCardListProps {
   residents: Resident[];
 }
 
 export const ResidentsCardList = ({ residents }: ResidentsCardListProps) => {
+  const { setSelectedResident } = useContext(ResidentsContext);
+  const { updateBreadcrumbMap } = useContext(BreadcrumbContext);
   const { pathname: currentRoute } = useLocation();
   const navigate = useNavigate();
-  const { setSelectedResident } = useContext(ResidentsContext);
 
   const handleResidentClick = (resident: Resident) => {
     setSelectedResident(resident);
 
     const residentUrl = getResourceUrlFromApiUrl(resident.url);
 
-    navigate(currentRoute + residentUrl, { state: resident.name });
+    updateBreadcrumbMap("resident", resident.name);
+    navigate(currentRoute + residentUrl);
   };
 
   return (

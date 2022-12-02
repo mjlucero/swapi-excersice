@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { getPlanets } from "@/services/planets.service";
 import { Pagination } from "@/types/Pagination";
 import { Planet } from "@/models/planet.model";
 import { PlanetsResponse } from "@/models/planets.response";
+import { IsLoadingContext } from "@/context/isLoading/IsLoadingContext";
 
 export const useGetPlanets = () => {
+  const { setIsLoading } = useContext(IsLoadingContext);
   const [nextUrl, setNextUrl] = useState<string>("");
   const [planets, setPlanets] = useState<Planet[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
@@ -13,7 +15,6 @@ export const useGetPlanets = () => {
     next: null,
     previous: null,
   });
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getPlanets().then(onGetPlanets);
@@ -32,13 +33,13 @@ export const useGetPlanets = () => {
         next,
         previous,
       });
+
       setIsLoading(false);
     },
     []
   );
 
   return {
-    isLoading,
     pagination,
     planets,
     setNextUrl,

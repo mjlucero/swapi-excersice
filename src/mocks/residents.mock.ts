@@ -1,4 +1,5 @@
-import { Resident } from "@/models/resident.model";
+import { Resident } from "@/models/residents.model";
+import { ResidentsResponse } from "@/models/residents.response";
 
 export const residentsMock: Resident[] = [
   {
@@ -61,3 +62,8 @@ export const residentsMock: Resident[] = [
     url: "https://swapi.dev/api/people/81/",
   },
 ];
+
+export const residentsResponseMock: ResidentsResponse = {
+  planetName: "Tatooine",
+  residents: residentsMock,
+};

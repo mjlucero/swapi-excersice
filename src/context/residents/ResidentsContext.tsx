@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { SetState } from "@/types/SetState";
-import { Resident } from "@/models/resident.model";
+import { Resident } from "@/models/residents.model";
 
 type ResidentsContextType = {
   residentsUrls: string[];

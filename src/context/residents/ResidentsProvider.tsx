@@ -1,4 +1,4 @@
-import { Resident } from "@/models/resident.model";
+import { Resident } from "@/models/residents.model";
 import { useState } from "react";
 import { ResidentsContext } from "./ResidentsContext";
 

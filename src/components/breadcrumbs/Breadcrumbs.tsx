@@ -1,43 +1,65 @@
 import { Link, useLocation } from "react-router-dom";
+import { routes } from "@/router/routes";
+import { useEffect, useState } from "react";
+
+import "./breadcrumbs.scss";
+
+interface Crumb {
+  title: string;
+  to: string;
+}
 
 export const Breadcrumbs = () => {
+  const [crumbs, setCrumbs] = useState<Crumb[]>([]);
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((path) => path);
 
-  console.log({ pathnames });
+  useEffect(() => {
+    const crumbsRoutes: Crumb[] = [];
 
-  const isParam = (path: string) => !isNaN(Number(path));
+    pathnames.forEach((_path, index) => {
+      const paths = pathnames.slice(0, index + 1);
 
-  return (
-    <ol>
-      {pathnames.map((path, index) => {
-        const isLast = index === pathnames.length - 1;
-        const nextPath = pathnames[index + 1];
+      const existingPath = routes.find(
+        ({ path: routePath }) => paths.length === routePath.split("/").length
+      );
+
+      if (existingPath) {
+        const { name: title } = existingPath;
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
-        console.log({ path, nextPath, isLast, to });
+        crumbsRoutes.push({
+          title,
+          to,
+        });
+      }
+    });
 
-        if (isLast) {
+    setCrumbs(crumbsRoutes);
+  }, [location]);
+
+  return (
+    <nav aria-label="Breadcrumb" className="breadcrumb">
+      <ul>
+        {crumbs.map((crumb, index) => {
+          const { title, to } = crumb;
+          const isLast = index === crumbs.length - 1;
+
+          if (isLast) {
+            return (
+              <li color="textPrimary" key={to}>
+                {title}
+              </li>
+            );
+          }
+
           return (
-            <li color="textPrimary" key={to}>
-              {/* {breadcrumbNameMap[to]} */}
-              {to}
+            <li key={to}>
+              <Link to={to}>{title}</Link>
             </li>
           );
-        }
-        
-        
-
-        if (nextPath && isParam(nextPath)) {
-          return (
-            <li>
-              <Link to={to} key={to}>
-                {path}
-              </Link>
-            </li>
-          );
-        }
-      })}
-    </ol>
+        })}
+      </ul>
+    </nav>
   );
 };

@@ -4,20 +4,17 @@ import { Route } from "@/models/route.model";
 export const routes: Route[] = [
   {
     Component: PlanetsPage,
-    name: "Planets",
+    name: "All Planets",
     path: "planets",
-    to: "/planets",
   },
   {
     Component: PlanetPage,
     name: "Planet",
     path: "planets/:planetId",
-    to: "/planets",
   },
   {
     Component: ResidenPage,
-    name: "People",
+    name: "Resident",
     path: "planets/:planetId/people/:peopleId",
-    to: "/people",
   },
 ];

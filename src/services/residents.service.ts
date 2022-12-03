@@ -1,64 +1,58 @@
-import { getPlanetById } from "./planets.service";
+import { AbortService } from "./abort.service";
 import { PEOPLE_URL } from "@/constants/api-urls";
+import { PlanetsService } from "./planets.service";
 import { Resident } from "@/models/residents.model";
 import { ResidentsResponse } from "@/models/residents.response";
 
-export const getResidentsByUrls = async (
-  residentsUrl: string[],
-  abortController: AbortController
-): Promise<Resident[]> => {
-  try {
-    const residentsPromises: Promise<Resident>[] = residentsUrl.map(
-      (residentUrl) =>
-        fetch(residentUrl, { signal: abortController.signal })
-          .then((res) => res.json())
-          .catch((error) => {
-            throw error;
-          })
-    );
-
-    return await Promise.all(residentsPromises);
-  } catch (error) {
-    return [];
+export class ResidentsService extends AbortService {
+  constructor(protected planetsService: PlanetsService) {
+    super();
   }
-};
 
-export const getResidentsByPlanetId = async (
-  planetId: string,
-  abortController: AbortController
-): Promise<ResidentsResponse> => {
-  const planet = await getPlanetById(planetId, abortController);
+  async getResidentById(residentId: string): Promise<Resident | null> {
+    try {
+      const res = await fetch(`${PEOPLE_URL}/${residentId}`, {
+        signal: this.controllerSignal,
+      });
 
-  if (planet) {
-    const residents = await getResidentsByUrls(
-      planet.residents,
-      abortController
-    );
+      return (await res.json()) as Promise<Resident>;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async getResidentsByUrls(residentsUrl: string[]): Promise<Resident[]> {
+    try {
+      const residentsPromises: Promise<Resident>[] = residentsUrl.map(
+        (residentUrl) =>
+          fetch(residentUrl, { signal: this.controllerSignal })
+            .then((res) => res.json())
+            .catch((error) => {
+              throw error;
+            })
+      );
+
+      return await Promise.all(residentsPromises);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async getResidentsByPlanetId(planetId: string): Promise<ResidentsResponse> {
+    const planet = await this.planetsService.getPlanetById(planetId);
+
+    if (planet) {
+      const residents = await this.getResidentsByUrls(planet.residents);
+
+      return {
+        planetName: planet.name,
+        residents,
+      };
+    }
 
     return {
-      planetName: planet.name,
-      residents,
+      planetName: "",
+      residents: [],
     };
   }
-
-  return {
-    planetName: "",
-    residents: [],
-  };
-};
-
-export const getResidentById = async (
-  residentId: string,
-  abortController: AbortController
-): Promise<Resident | null> => {
-  try {
-    const res = await fetch(`${PEOPLE_URL}/${residentId}`, {
-      signal: abortController.signal,
-    });
-    const resident = (await res.json()) as Promise<Resident>;
-
-    return resident;
-  } catch (error) {
-    return null;
-  }
-};
+}

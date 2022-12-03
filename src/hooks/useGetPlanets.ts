@@ -1,14 +1,14 @@
 import { useCallback, useContext, useEffect, useState, useRef } from "react";
 
-import { getAllPlanets } from "@/services/planets.service";
 import { IsLoadingContext } from "@/context/isLoading/IsLoadingContext";
 import { ITEMS_PER_PAGE } from "@/constants/pagination";
 import { Paginator } from "@/helpers/Paginator";
 import { Planet } from "@/models/planet.model";
+import { PlanetsService } from "@/services/planets.service";
 
 export const useGetPlanets = () => {
-  const abortController = new AbortController();
-  
+  const planetService = new PlanetsService();
+
   const [planets, setPlanets] = useState<Planet[]>([]);
   const [paginator, setPaginator] = useState<Paginator<Planet>>();
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,10 +19,10 @@ export const useGetPlanets = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getAllPlanets(abortController).then(onGetPlanets);
+    planetService.getAllPlanets().then(onGetPlanets);
 
     return () => {
-      abortController.abort();
+      planetService.abortCalls();
     };
   }, []);
 
@@ -33,10 +33,13 @@ export const useGetPlanets = () => {
       planet.name.toLowerCase().includes(searchValue)
     );
 
-    const filteredPaginator = new Paginator(filteredPlanets, ITEMS_PER_PAGE);
+    const filteredPlanetsPaginator = new Paginator(
+      filteredPlanets,
+      ITEMS_PER_PAGE
+    );
 
-    setPaginator(filteredPaginator);
-    setPlanets(filteredPaginator.page(1) || []);
+    setPaginator(filteredPlanetsPaginator);
+    setPlanets(filteredPlanetsPaginator.page(1) || []);
   }, [searchTerm]);
 
   const onGetPlanets = useCallback((planets: Planet[]) => {

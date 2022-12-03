@@ -5,13 +5,12 @@ import { BreadcrumbContext } from "@/context/breadcrumb/BreadcrumbContext";
 import { IsLoadingContext } from "@/context/isLoading/IsLoadingContext";
 import { Resident } from "@/models/residents.model";
 import { ResidentsContext } from "@/context/residents/ResidentsContext";
-import {
-  getResidentsByPlanetId,
-  getResidentsByUrls,
-} from "@/services/residents.service";
+import { ResidentsService } from "@/services/residents.service";
+import { PlanetsService } from "@/services/planets.service";
+import { ResidentsResponse } from "@/models/residents.response";
 
 export const useGetResidents = () => {
-  const abortController = new AbortController();
+  const residentsService = new ResidentsService(new PlanetsService());
 
   const { planetId } = useParams();
   const { residentsUrls } = useContext(ResidentsContext);
@@ -23,24 +22,30 @@ export const useGetResidents = () => {
     setIsLoading(true);
 
     if (residentsUrls && residentsUrls.length > 0) {
-      getResidentsByUrls(residentsUrls, abortController).then(onGetResidents);
+      residentsService.getResidentsByUrls(residentsUrls).then(onGetResidents);
     } else {
       planetId &&
-        getResidentsByPlanetId(planetId, abortController).then(
-          ({ planetName, residents }) => {
-            updateBreadcrumbMap("planet", planetName);
-            onGetResidents(residents);
-          }
-        );
+        residentsService
+          .getResidentsByPlanetId(planetId)
+          .then(onGetResidentsByPlanet);
     }
 
     return () => {
-      abortController.abort();
+      residentsService.abortCalls();
     };
   }, []);
 
-  const onGetResidents = useCallback((residentsRes: Resident[]) => {
-    setResidents(residentsRes);
+  const onGetResidentsByPlanet = useCallback(
+    ({ planetName, residents }: ResidentsResponse) => {
+      updateBreadcrumbMap("planet", planetName);
+      setResidents(residents);
+      setIsLoading(false);
+    },
+    []
+  );
+
+  const onGetResidents = useCallback((residentRes: Resident[]) => {
+    setResidents(residentRes);
     setIsLoading(false);
   }, []);
 

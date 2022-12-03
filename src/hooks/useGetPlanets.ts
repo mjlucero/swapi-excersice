@@ -1,47 +1,59 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState, useRef } from "react";
 
-import { getPlanets } from "@/services/planets.service";
-import { Pagination } from "@/types/Pagination";
-import { Planet } from "@/models/planet.model";
-import { PlanetsResponse } from "@/models/planets.response";
+import { getAllPlanets } from "@/services/planets.service";
 import { IsLoadingContext } from "@/context/isLoading/IsLoadingContext";
+import { ITEMS_PER_PAGE } from "@/constants/pagination";
+import { Paginator } from "@/helpers/Paginator";
+import { Planet } from "@/models/planet.model";
 
 export const useGetPlanets = () => {
-  const { setIsLoading } = useContext(IsLoadingContext);
-  const [nextUrl, setNextUrl] = useState<string>("");
+  const abortController = new AbortController();
+  
   const [planets, setPlanets] = useState<Planet[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({
-    count: 0,
-    next: null,
-    previous: null,
-  });
+  const [paginator, setPaginator] = useState<Paginator<Planet>>();
+  const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    getPlanets().then(onGetPlanets);
-  }, []);
+  const { setIsLoading } = useContext(IsLoadingContext);
+
+  const orignalPlanetsRef = useRef<Planet[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
-    getPlanets(nextUrl).then(onGetPlanets);
-  }, [nextUrl]);
+    getAllPlanets(abortController).then(onGetPlanets);
 
-  const onGetPlanets = useCallback(
-    ({ count, next, previous, results }: PlanetsResponse) => {
-      setPlanets(results);
-      setPagination({
-        count,
-        next,
-        previous,
-      });
+    return () => {
+      abortController.abort();
+    };
+  }, []);
 
-      setIsLoading(false);
-    },
-    []
-  );
+  useEffect(() => {
+    const searchValue = searchTerm.toLowerCase();
+
+    const filteredPlanets = orignalPlanetsRef.current.filter((planet) =>
+      planet.name.toLowerCase().includes(searchValue)
+    );
+
+    const filteredPaginator = new Paginator(filteredPlanets, ITEMS_PER_PAGE);
+
+    setPaginator(filteredPaginator);
+    setPlanets(filteredPaginator.page(1) || []);
+  }, [searchTerm]);
+
+  const onGetPlanets = useCallback((planets: Planet[]) => {
+    const newPaginator = new Paginator(planets, ITEMS_PER_PAGE);
+
+    orignalPlanetsRef.current = planets;
+
+    setPaginator(newPaginator);
+    setPlanets(newPaginator.page(1) || []);
+    setIsLoading(false);
+  }, []);
 
   return {
-    pagination,
+    paginator,
     planets,
-    setNextUrl,
+    searchTerm,
+    setPlanets,
+    setSearchTerm,
   };
 };

@@ -9,7 +9,6 @@ export const ResidentPage = () => {
       {resident && (
         <>
           <h2>{resident.name}</h2>
-
           <ResidentDetails resident={resident} />
         </>
       )}

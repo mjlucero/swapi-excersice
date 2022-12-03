@@ -1,54 +1,64 @@
+import { getPlanetById } from "./planets.service";
 import { PEOPLE_URL } from "@/constants/api-urls";
-import { residentsMock, residentsResponseMock } from "@/mocks/residents.mock";
 import { Resident } from "@/models/residents.model";
 import { ResidentsResponse } from "@/models/residents.response";
-import { getPlanetById } from "./planets.service";
 
 export const getResidentsByUrls = async (
-  residentsUrl: string[]
+  residentsUrl: string[],
+  abortController: AbortController
 ): Promise<Resident[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(residentsMock);
-    }, 2000);
-  });
+  try {
+    const residentsPromises: Promise<Resident>[] = residentsUrl.map(
+      (residentUrl) =>
+        fetch(residentUrl, { signal: abortController.signal })
+          .then((res) => res.json())
+          .catch((error) => {
+            throw error;
+          })
+    );
 
-  const residentsPromises: Promise<Resident>[] = residentsUrl.map(
-    (residentUrl) => fetch(residentUrl).then((res) => res.json())
-  );
-
-  return await Promise.all(residentsPromises);
+    return await Promise.all(residentsPromises);
+  } catch (error) {
+    return [];
+  }
 };
 
 export const getResidentsByPlanetId = async (
-  planetId: string
+  planetId: string,
+  abortController: AbortController
 ): Promise<ResidentsResponse> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(residentsResponseMock);
-    }, 2000);
-  });
+  const planet = await getPlanetById(planetId, abortController);
 
-  const planet = await getPlanetById(planetId);
-  const residents = await getResidentsByUrls(planet.residents);
+  if (planet) {
+    const residents = await getResidentsByUrls(
+      planet.residents,
+      abortController
+    );
+
+    return {
+      planetName: planet.name,
+      residents,
+    };
+  }
 
   return {
-    planetName: planet.name,
-    residents,
+    planetName: "",
+    residents: [],
   };
 };
 
 export const getResidentById = async (
-  residentId: string
-): Promise<Resident> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(residentsResponseMock.residents[0]);
-    }, 2000);
-  });
+  residentId: string,
+  abortController: AbortController
+): Promise<Resident | null> => {
+  try {
+    const res = await fetch(`${PEOPLE_URL}/${residentId}`, {
+      signal: abortController.signal,
+    });
+    const resident = (await res.json()) as Promise<Resident>;
 
-  const res = await fetch(`${PEOPLE_URL}/${residentId}`);
-  const resident = (await res.json()) as Promise<Resident>;
-
-  return resident;
+    return resident;
+  } catch (error) {
+    return null;
+  }
 };

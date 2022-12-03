@@ -9,11 +9,13 @@ import { Resident } from "@/models/residents.model";
 import { ResidentsContext } from "@/context/residents/ResidentsContext";
 
 export const useGetResident = () => {
+  const abortController = new AbortController();
+  
   const { planetId, peopleId } = useParams();
   const { selectedResident } = useContext(ResidentsContext);
   const { setIsLoading } = useContext(IsLoadingContext);
   const { updateBreadcrumbMap } = useContext(BreadcrumbContext);
-  const [resident, setResident] = useState<Resident>();
+  const [resident, setResident] = useState<Resident | null>();
 
   useEffect(() => {
     if (selectedResident) {
@@ -22,15 +24,19 @@ export const useGetResident = () => {
       setIsLoading(true);
       getPlanetAndResident(planetId, peopleId).then(onGetPlanetAndResident);
     }
+
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   const getPlanetAndResident = useCallback(
     async (planetId: string, peopleId: string) => {
-      const { name } = await getPlanetById(planetId);
-      const resident = await getResidentById(peopleId);
+      const planet = await getPlanetById(planetId, abortController);
+      const resident = await getResidentById(peopleId, abortController);
 
       return {
-        planetName: name,
+        planetName: planet?.name || "",
         resident,
       };
     },
@@ -38,9 +44,15 @@ export const useGetResident = () => {
   );
 
   const onGetPlanetAndResident = useCallback(
-    ({ planetName, resident }: { planetName: string; resident: Resident }) => {
+    ({
+      planetName,
+      resident,
+    }: {
+      planetName: string;
+      resident: Resident | null;
+    }) => {
       updateBreadcrumbMap("planet", planetName);
-      updateBreadcrumbMap("resident", resident.name);
+      updateBreadcrumbMap("resident", resident?.name || "");
 
       setResident(resident);
 

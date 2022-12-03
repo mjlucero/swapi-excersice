@@ -1,0 +1,38 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+
+  &__list {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    column-gap: 8px;
+  }
+
+  &__item {
+    button {
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      height: 40px;
+      width: 40px;
+    }
+
+    &--number button {
+      background-color: transparent;
+      border-color: transparent;
+
+      &:hover {
+        background-color: rgb(114, 114, 114);
+      }
+    }
+
+    &--selected button {
+      background-color: rgb(94, 94, 94);
+    }
+  }
+}

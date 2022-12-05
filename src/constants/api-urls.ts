@@ -1,4 +1,4 @@
-const BASE_URL = "https://swapi.py4e.com/api/"; //"https://swapi.dev/api"
+const BASE_URL = "https://swapi.dev/api";
 const PLANETS_RESOURCE = "/planets";
 const PEOPLE_RESOURCE = "/people";
 

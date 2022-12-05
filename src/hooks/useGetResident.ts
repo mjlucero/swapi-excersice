@@ -14,7 +14,7 @@ export const useGetResident = () => {
 
   const { planetId, peopleId } = useParams();
   const { selectedResident } = useContext(ResidentsContext);
-  const { setIsLoading } = useContext(IsLoadingContext);
+  const { isLoading, setIsLoading } = useContext(IsLoadingContext);
   const { updateBreadcrumbMap } = useContext(BreadcrumbContext);
   const [resident, setResident] = useState<Resident | null>();
 
@@ -64,6 +64,7 @@ export const useGetResident = () => {
   );
 
   return {
+    isLoading,
     resident,
   };
 };

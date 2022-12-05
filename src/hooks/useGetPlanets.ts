@@ -13,7 +13,7 @@ export const useGetPlanets = () => {
   const [paginator, setPaginator] = useState<Paginator<Planet>>();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { setIsLoading } = useContext(IsLoadingContext);
+  const { isLoading, setIsLoading } = useContext(IsLoadingContext);
 
   const orignalPlanetsRef = useRef<Planet[]>([]);
 
@@ -53,6 +53,7 @@ export const useGetPlanets = () => {
   }, []);
 
   return {
+    isLoading,
     paginator,
     planets,
     searchTerm,

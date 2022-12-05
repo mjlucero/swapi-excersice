@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 
+import { ErrorMessage } from "@/components/error-message/ErrorMessage";
 import { Input } from "@/components/input/Input";
 import { InputChangeEvent } from "@/types/Events";
 import { Pagination } from "./components/pagination/Pagination";
@@ -9,10 +10,17 @@ import { useGetPlanets } from "@/hooks/useGetPlanets";
 
 import "./planetsPage.scss";
 
+
 export const PlanetsPage = () => {
   const { setResidentsUrls } = useContext(ResidentsContext);
-  const { planets, paginator, searchTerm, setPlanets, setSearchTerm } =
-    useGetPlanets();
+  const {
+    planets,
+    paginator,
+    searchTerm,
+    setPlanets,
+    setSearchTerm,
+    isLoading,
+  } = useGetPlanets();
 
   useEffect(() => {
     setResidentsUrls([]);
@@ -36,11 +44,6 @@ export const PlanetsPage = () => {
     setPlanets(paginator?.page(pageNumber) || []);
   };
 
-  const handleReload = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    window.location.reload();
-  };
-
   return (
     <div className="planets-page">
       <div className="planets-page__filter">
@@ -51,23 +54,12 @@ export const PlanetsPage = () => {
           value={searchTerm}
         />
       </div>
-      {planets.length === 0 && (
-        <div className="planets-page__error-message">
-          <span>
-            There is no items to show. Please try again later or{" "}
-            <a href="#" onClick={handleReload}>
-              refresh the page
-            </a>
-          </span>
-        </div>
-      )}
-
+      {planets.length === 0 && !isLoading && <ErrorMessage />}
       {planets.length > 0 && (
         <div className="planets-page__cards">
           <PlanetCardList planets={planets} />
         </div>
       )}
-
       {paginator && (
         <Pagination
           currentPage={paginator.currentPage}
